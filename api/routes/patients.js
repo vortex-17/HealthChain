@@ -23,6 +23,10 @@ router.post("/book", patientController.book);
 
 router.get("/history", patientController.history);
 
+router.get("/appointments", patientController.my_appointments);
+
+router.post("/share=:id", patientController.share);
+
 module.exports = router;
 
 // {

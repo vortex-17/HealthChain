@@ -21,12 +21,26 @@ const cookieparser = require("cookie-parser");
 
 const upload = multer();
 
+// Importing Web3 libraries
+const Web3 = require('web3');
+const contract = require('truffle-contract');
+const artifacts = require('./build/Inbox.json');
+
+if (typeof web3 !== 'undefined') {
+  var web3 = new Web3(web3.currentProvider)
+} else {
+  var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
+}
+
+const LMS = contract(artifacts)
+LMS.setProvider(web3.currentProvider)
+
+const accounts = await web3.eth.getAccounts();
+const lms = await LMS.deployed();
+
 //Import Routes
 const patientRoutes = require("./api/routes/patients");
 const doctorRotues = require("./api/routes/doctors");
-
-// import {router as patientRoutes} from "./api/routes/patients.js"
-// import {router as doctorRotues} from "./api/routes/doctors.js"
 
 try {
     mongoose.connect("mongodb://127.0.0.1:27017/healthchain", {

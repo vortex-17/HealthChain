@@ -15,7 +15,11 @@ const dotenv = require("dotenv").config();
 
 const doctorSchema = require("../models/doctors");
 const patientSchema = require("../models/patients");
-const clinic = require("../models/clinic");
+const clinicSchema = require("../models/clinic");
+
+const shortid = require('short-id')
+const IPFS = require("ipfs-http-client")
+const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
 
 exports.signup = async (req,res,next) => {
     let patient;
@@ -108,9 +112,44 @@ exports.find = async (req,res,next) => {
 }
 
 exports.book = async (req,res,next) => {
+    let appointment;
+    try {
+        appointment = await clinicSchema.find({}).exec()
+    } catch (err) {
+        res.status(404).json({message : err});
+    }
 
+    if(appointment.length >= 1){
+        res.status(404).json({
+            message : "An appointment already exists at this time. Please try for another time"
+        });
+    } else {
+        const new_appointment = new clinicSchema({
+            transactionID : new mongoose.Types.ObjectId().toString(),
+            patientId : req.id,
+            doctorId : req.body.doctorId,
+            date : req.body.date,
+            time : req.body.time
+        });
+
+        try {
+            await new_appointment.save();
+        } catch (err) {
+            res.status(404).json({message : err});
+        }
+
+        res.status(200).json({message : "Your Appointment has been booked"});
+    }
 }
 
 exports.history = async (req,res,next) => {
 
+}
+
+exports.my_appointments = async (req, res, next) => {
+
+}
+
+exports.share = async (req, res, next) => {
+    
 }

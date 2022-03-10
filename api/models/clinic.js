@@ -6,6 +6,7 @@ const clinicSchema = mongoose.Schema({
     patientId : {type : String, required : true},
     doctorId : {type  : String, required : true},
     date : {type : String, required : true},
+    time : {type : Number, required : true},
     patient_bch : {type: String}, //encrypted - can allow users to access data from blockchain -> IPFS
     doctor_bch : {type:String},     //encrypted - cann allow doctods to access data from blockchain -> IPFS
 });

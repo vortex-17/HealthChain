@@ -9,9 +9,14 @@ const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser')
 const jwt = require("jsonwebtoken");
 
-router.post("signup");
-router.post("login");
-router.post("mypatients");
-router.post("appointments");
+const doctorController = require("../controllers/doctors");
+
+router.post("signup", doctorController.signup);
+
+router.post("login", doctorController.login);
+
+router.post("mypatients", doctorController.mypatients);
+
+router.post("appointments", doctorController.appointments);
 
 module.exports = router;
