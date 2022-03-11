@@ -27,6 +27,8 @@ router.get("/appointments", patientController.my_appointments);
 
 router.post("/share=:id", patientController.share);
 
+router.post("/test", patientController.test);
+
 module.exports = router;
 
 // {

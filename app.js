@@ -35,8 +35,8 @@ if (typeof web3 !== 'undefined') {
 const LMS = contract(artifacts)
 LMS.setProvider(web3.currentProvider)
 
-const accounts = await web3.eth.getAccounts();
-const lms = await LMS.deployed();
+const accounts =  web3.eth.getAccounts();
+const lms =  LMS.deployed();
 
 //Import Routes
 const patientRoutes = require("./api/routes/patients");
@@ -111,4 +111,8 @@ app.use((req, res, next) => {
   
 
 
-module.exports = app;
+module.exports = {
+  app : app,
+  lms : lms,
+  accounts : accounts
+}

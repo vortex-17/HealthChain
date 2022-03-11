@@ -15,8 +15,10 @@ router.post("signup", doctorController.signup);
 
 router.post("login", doctorController.login);
 
-router.post("mypatients", doctorController.mypatients);
+router.get("mypatients", doctorController.mypatients);
 
-router.post("appointments", doctorController.appointments);
+router.get("appointments", doctorController.my_appointments);
+
+router.post("prescribe=:id", doctorController.prescribe);
 
 module.exports = router;

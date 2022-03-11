@@ -18,8 +18,11 @@ const patientSchema = require("../models/patients");
 const clinicSchema = require("../models/clinic");
 
 const shortid = require('short-id')
-const IPFS = require("ipfs-http-client")
-const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
+const IPFS = require("ipfs-http-client");
+// const ipfs = IPFS.create();
+const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
+const lms = require("../../app").lms;
+const accounts = require("../../app").accounts; 
 
 exports.signup = async (req,res,next) => {
     let patient;
@@ -138,18 +141,92 @@ exports.book = async (req,res,next) => {
             res.status(404).json({message : err});
         }
 
+        //insert the new patientt in doctor's patient list
+
         res.status(200).json({message : "Your Appointment has been booked"});
     }
 }
 
 exports.history = async (req,res,next) => {
+    let history;
+    try {
+        history = await clinicSchema.find({patientId : req.id}).exec();
+    } catch (err) {
+        res.status(404).json({message : err});
+    }
 
+    if(history.length < 1) {
+        res.status(200).json({message : "Book your first appointment today !"});
+    } else {
+
+        // The patient has got history
+        // Need to parse through the blockchain and get the IPFS hash and access it.
+    }
 }
 
 exports.my_appointments = async (req, res, next) => {
+    let date = new Date();
+    let d = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDay();
+    d = date.getDay() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    let appointments;
+    try {
+        appointments = await clinicSchema.find({date : date}).exec();
+    } catch (err) {
+        res.status(404).json({message: err});
+    }
 
+    if(appointments.length < 1) {
+        res.status(400).json({message : "You do not have any appointments for today"});
+    } else {
+        res.status(200).json({appointments : appointments});
+    }
 }
 
 exports.share = async (req, res, next) => {
-    
+    let appointment;
+    try {
+        appointment = await clinicSchema.find({transactionID : req.params.id}).exec();
+    } catch (err) {
+        res.status(404).json({message : err});
+    }
+
+    if(appointment.length < 1) {
+        res.status(404).json({message : "No appointment with this transactionID"});
+    } else {
+        const patient_blockchain = appointment[0].patient_bch;
+
+        //decrypt patient_blockchain and then access the IPFS hash
+
+        let shared_link = "https://ipfs.infure.io./arg?<hash>";
+
+        //email the shared_link
+    }
+}
+
+exports.test = async (req, res, next) => {
+    // this is used to test IPFS and blockchain
+    let buffer = req.body.buffer;
+    let id = shortid.generate() + shortid.generate()
+    if(buffer) {
+        let ipfsHash;
+        try {
+            ipfsHash = await ipfs.add(Buffer.from(JSON.stringify(buffer)));
+        } catch (err) {
+            res.status(404).json({error: err});
+        }
+        console.log(ipfsHash);
+        for await (const item of ipfsHash) {
+            console.log('item', item)
+        } 
+        console.log("hello world");
+        let hash = ipfsHash[0];
+        console.log(hash);
+        lms.sendIPFS(id, hash, {from: accounts[0]})
+        .then((_hash, _address)=>{
+            res.json({"status":"success", "generated_id" : id,"ipfs hash" : hash, "blockchain hash": _hash, "address": _address})
+        })
+        .catch(err=>{
+            res.status(500).json({"status":"Failed", "reason":"Upload error occured"})
+        });
+    }
 }
