@@ -21,23 +21,6 @@ const cookieparser = require("cookie-parser");
 
 const upload = multer();
 
-// Importing Web3 libraries
-const Web3 = require('web3');
-const contract = require('truffle-contract');
-const artifacts = require('./build/Inbox.json');
-
-if (typeof web3 !== 'undefined') {
-  var web3 = new Web3(web3.currentProvider)
-} else {
-  var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
-}
-
-const LMS = contract(artifacts)
-LMS.setProvider(web3.currentProvider)
-
-const accounts =  web3.eth.getAccounts();
-const lms =  LMS.deployed();
-
 //Import Routes
 const patientRoutes = require("./api/routes/patients");
 const doctorRotues = require("./api/routes/doctors");
@@ -112,7 +95,5 @@ app.use((req, res, next) => {
 
 
 module.exports = {
-  app : app,
-  lms : lms,
-  accounts : accounts
+  app : app
 }

@@ -19,10 +19,11 @@ const clinicSchema = require("../models/clinic");
 
 const shortid = require('short-id')
 const IPFS = require("ipfs-http-client");
+// const { doesNotMatch } = require("assert");
 // const ipfs = IPFS.create();
 const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
-const lms = require("../../app").lms;
-const accounts = require("../../app").accounts; 
+// const lms = require("../../web3_utils").lms;
+// const accounts = require("../../web3_utils").accounts; 
 
 exports.signup = async (req,res,next) => {
     let patient;
@@ -182,26 +183,21 @@ exports.my_appointments = async (req, res, next) => {
     }
 }
 
-exports.share = async (req, res, next) => {
-    let appointment;
-    try {
-        appointment = await clinicSchema.find({transactionID : req.params.id}).exec();
-    } catch (err) {
-        res.status(404).json({message : err});
-    }
 
-    if(appointment.length < 1) {
-        res.status(404).json({message : "No appointment with this transactionID"});
-    } else {
-        const patient_blockchain = appointment[0].patient_bch;
 
-        //decrypt patient_blockchain and then access the IPFS hash
+const Web3 = require('web3');
+const contract = require('truffle-contract');
+const artifacts = require('../../build/Inbox.json');
 
-        let shared_link = "https://ipfs.infure.io./arg?<hash>";
-
-        //email the shared_link
-    }
+if (typeof web3 !== 'undefined') {
+  var web3 = new Web3(web3.currentProvider)
+} else {
+  var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
 }
+
+const LMS = contract(artifacts)
+LMS.setProvider(web3.currentProvider)
+
 
 exports.test = async (req, res, next) => {
     // this is used to test IPFS and blockchain
@@ -209,17 +205,30 @@ exports.test = async (req, res, next) => {
     let id = shortid.generate() + shortid.generate()
     if(buffer) {
         let ipfsHash;
-        try {
-            ipfsHash = await ipfs.add(Buffer.from(JSON.stringify(buffer)));
-        } catch (err) {
-            res.status(404).json({error: err});
-        }
-        console.log(ipfsHash);
-        for await (const item of ipfsHash) {
+        // try {
+        //     ipfsHash = await ipfs.add(Buffer.from(JSON.stringify(buffer)));
+        // } catch (err) {
+        //     res.status(404).json({error: err});
+        // }
+        // console.log(ipfsHash.next());
+        const arr = [];
+        console.log("Hello");
+        for await (const item of ipfs.add(Buffer.from(JSON.stringify(buffer)))) {
             console.log('item', item)
+            arr.push(item);
+            break;
         } 
-        console.log("hello world");
-        let hash = ipfsHash[0];
+        // let value;
+        // let done;
+        // while (true) {
+        //     done, value = await ipfsHash.next();
+        //     if (done) break;
+        // }
+        const accounts =  await web3.eth.getAccounts();
+        const lms =  await LMS.deployed();
+        console.log(accounts[0])
+        console.log("Hello World");
+        let hash = arr[0].path;
         console.log(hash);
         lms.sendIPFS(id, hash, {from: accounts[0]})
         .then((_hash, _address)=>{

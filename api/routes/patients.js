@@ -12,6 +12,7 @@ const jwt = require("jsonwebtoken");
 //Routes for the patients
 
 const patientController = require("../controllers/patients");
+const web3_controllers = require("../controllers/web3_ctrl");
 
 router.post("/signup", patientController.signup);
 
@@ -21,11 +22,13 @@ router.post("/find=:type", patientController.find);
 
 router.post("/book", patientController.book);
 
-router.get("/history", patientController.history);
+router.get("/history", web3_controllers.all_history);
+
+router.get("/history=:id", web3_controllers.history);
 
 router.get("/appointments", patientController.my_appointments);
 
-router.post("/share=:id", patientController.share);
+router.post("/share=:id", web3_controllers.share);
 
 router.post("/test", patientController.test);
 
