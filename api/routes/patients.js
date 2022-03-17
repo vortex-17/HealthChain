@@ -13,22 +13,38 @@ const jwt = require("jsonwebtoken");
 
 const patientController = require("../controllers/patients");
 const web3_controllers = require("../controllers/web3_ctrl");
+const checkauth = require("../middlewares/checkauth");
 
-router.post("/signup", patientController.signup);
+const withAuthUserId = [
+    cookieParser(),
+    (req, res, next) => {
+      const claims = jwt.verify(req.cookies['jwt'], "healthchain")
+      req['authUserId'] = claims['sub'];
+      req["expiry"] = claims["exp"];
+      console.log(claims);
+      req.id = claims["_id"];
+      console.log(req.id);
+    //   console.log(req['authUserId']);
+    //   console.log(claims['sub']);
+      next()
+    }
+]
 
-router.post("/login", patientController.login);
+router.post("/signup", patientController.signup); //works
 
-router.post("/find=:type", patientController.find);
+router.post("/login", patientController.login); //works
 
-router.post("/book", patientController.book);
+router.get("/find=:type", patientController.find); //works
 
-router.get("/history", web3_controllers.all_history);
+router.post("/book", checkauth, patientController.book); //works
 
-router.get("/history=:id", web3_controllers.history);
+router.get("/history", checkauth, web3_controllers.all_history); //works
 
-router.get("/appointments", patientController.my_appointments);
+router.get("/history=:id", checkauth, web3_controllers.history);
 
-router.post("/share=:id", web3_controllers.share);
+router.get("/appointments", checkauth, patientController.my_appointments); //works
+
+router.post("/share=:id", checkauth, web3_controllers.share);
 
 router.post("/test", patientController.test);
 

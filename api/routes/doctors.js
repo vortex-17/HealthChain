@@ -11,15 +11,24 @@ const jwt = require("jsonwebtoken");
 
 const doctorController = require("../controllers/doctors");
 const web3_controllers = require("../controllers/web3_ctrl");
+const checkauth = require("../middlewares/checkauth");
 
-router.post("signup", doctorController.signup);
+router.post("/signup", doctorController.signup); //works
 
-router.post("login", doctorController.login);
+router.post("/login", doctorController.login); //works
 
-router.get("mypatients", doctorController.mypatients);
+router.get("/mypatients", checkauth, doctorController.mypatients);
 
-router.get("appointments", doctorController.my_appointments);
+router.get("/appointments", checkauth, doctorController.my_appointments); //works
 
-router.post("prescribe=:id", web3_controllers.prescribe);
+router.post("/prescribe=:id", checkauth, web3_controllers.prescribe); //works
 
 module.exports = router;
+
+// {
+//     "name" : "Akshat Kashyap",
+//     "email" : "kashyapakshat@gmail.com",
+//     "phone" : "1234567890",
+//     "password" : "akshatkashyap",
+//     "type" : "Dermatologist"
+// }s

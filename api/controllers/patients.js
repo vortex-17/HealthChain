@@ -90,7 +90,7 @@ exports.login = async (req,res,next) => {
                 _id : patient[0].id,
                 name : patient[0].name,
                 email : patient[0].email
-            }, "healthchain", { expiresIn : "30m"});
+            }, "healthchain", { expiresIn : "60m"});
 
             res.cookie('jwt', token);
 
@@ -118,7 +118,7 @@ exports.find = async (req,res,next) => {
 exports.book = async (req,res,next) => {
     let appointment;
     try {
-        appointment = await clinicSchema.find({}).exec()
+        appointment = await clinicSchema.find({date :req.body.date, doctorId : req.body.doctorId, time : req.body.time }).exec()
     } catch (err) {
         res.status(404).json({message : err});
     }
@@ -169,13 +169,15 @@ exports.my_appointments = async (req, res, next) => {
     let date = new Date();
     let d = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDay();
     d = date.getDay() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    d = "20/03/22"; //Just for testing
+    console.log("Date: " + d);
     let appointments;
     try {
-        appointments = await clinicSchema.find({date : date}).exec();
+        appointments = await clinicSchema.find({patientId : req.id, date : d}).exec();
     } catch (err) {
         res.status(404).json({message: err});
     }
-
+    console.log(appointments);
     if(appointments.length < 1) {
         res.status(400).json({message : "You do not have any appointments for today"});
     } else {

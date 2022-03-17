@@ -13,9 +13,10 @@ const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
 
 const doctorSchema = require("../models/doctors");
 const patientSchema = require("../models/patients");
-const clinic = require("../models/clinic");
+const clinicSchema = require("../models/clinic");
 
 exports.signup = async (req,res,next) => {
+    console.log("Doctor signing");
     let doctor;
     try {
         doctor = await doctorSchema.find({email : req.body.email}).exec();
@@ -24,7 +25,6 @@ exports.signup = async (req,res,next) => {
             message : err
         });
     }
-    console.log(patient);
     if(doctor.length >= 1){
         res.status(403).json({message : "User already exists"});
     } else {
@@ -70,7 +70,7 @@ exports.login = async (req,res,next) => {
     } else {
         let user;
         try {
-            user = await bcrypt.compare(req.body.password, patient[0].password);
+            user = await bcrypt.compare(req.body.password, doctor[0].password);
         } catch (err) {
             res.status(404).json({message : "Wrong password"});
         }
@@ -80,7 +80,7 @@ exports.login = async (req,res,next) => {
                 _id : doctor[0].id,
                 name : doctor[0].name,
                 email : doctor[0].email
-            }, "healthchain", { expiresIn : "30m"});
+            }, "healthchain", { expiresIn : "60m"});
 
             res.cookie('jwt', token);
 
@@ -93,9 +93,10 @@ exports.my_appointments = async (req, res, next) => {
     let date = new Date();
     let d = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDay();
     d = date.getDay() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    d = "20/03/22"; //For testing
     let appointments;
     try {
-        appointments = await clinicSchema.find({date : date}).exec();
+        appointments = await clinicSchema.find({doctorId : req.id, date : d}).exec();
     } catch (err) {
         res.status(404).json({message: err});
     }

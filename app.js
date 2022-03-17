@@ -70,7 +70,7 @@ app.use((req, res, next) => {
 }); 
 
 app.use("/patients", patientRoutes);
-app.use("/doctor", doctorRotues);
+app.use("/doctors", doctorRotues);
 
 app.get("/", (req,res,next) => {
   res.status(200).json({

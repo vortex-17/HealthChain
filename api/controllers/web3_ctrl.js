@@ -2,6 +2,17 @@ const Web3 = require('web3');
 const contract = require('truffle-contract');
 const artifacts = require('../../build/Inbox.json');
 const { lms } = require('../../web3_utils');
+const IPFS = require("ipfs-http-client");
+// const { doesNotMatch } = require("assert");
+// const ipfs = IPFS.create();
+const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'http'});
+const shortid = require('short-id');
+const fetch = require('node-fetch');
+
+const doctorSchema = require("../models/doctors");
+const patientSchema = require("../models/patients");
+const clinicSchema = require("../models/clinic");
+const { response } = require('express');
 
 if (typeof web3 !== 'undefined') {
   var web3 = new Web3(web3.currentProvider)
@@ -43,15 +54,15 @@ exports.test = async (req, res, next) => {
         //     done, value = await ipfsHash.next();
         //     if (done) break;
         // }
-        // const accounts =  await web3.eth.getAccounts();
-        // const lms =  await LMS.deployed();
-        let lms;
-        let accounts;
-        try {
-            lms, accounts = await deploy();
-        } catch (err) {
-            res.status(404).json({message : err});
-        }
+        const accounts =  await web3.eth.getAccounts();
+        const lms =  await LMS.deployed();
+        // let lms;
+        // let accounts;
+        // try {
+        //     lms, accounts = await deploy();
+        // } catch (err) {
+        //     res.status(404).json({message : err});
+        // }
         console.log(accounts[0])
         console.log("Hello World");
         let hash = arr[0].path;
@@ -70,8 +81,8 @@ exports.prescribe = async (req,res,next) => {
 
     let presciption = req.body.presciption;
     let transaction_id = req.params.transaction_id;
+    const arr = [];
     if(presciption){
-        const arr = [];
         for await (const item of ipfs.add(Buffer.from(JSON.stringify(presciption)))) {
             // console.log('item', item)
             arr.push(item);
@@ -80,14 +91,17 @@ exports.prescribe = async (req,res,next) => {
     }
 
     let hash = arr[0].path;
-    let lms;
-    let accounts;
+    // let lms;
+    // let accounts;
     let id = shortid.generate() + shortid.generate()
-    try {
-        lms, accounts = await deploy();
-    } catch (err) {
-        res.status(404).json({message : err});
-    }
+    // try {
+    //     lms, accounts = await deploy();
+    // } catch (err) {
+    //     res.status(404).json({message : err});
+    // }
+
+    const accounts =  await web3.eth.getAccounts();
+    const lms =  await LMS.deployed();
 
     //update the clinic collection
     try {
@@ -98,6 +112,7 @@ exports.prescribe = async (req,res,next) => {
 
     lms.sendIPFS(id, hash, {from: accounts[0]})
     .then((_hash, _address)=>{
+        clinicSchema.updateOne({transactionID : transaction_id}, {$set : {patient_bch : id}});
         res.json({"status":"success", "generated_id" : id,"ipfs hash" : hash, "blockchain hash": _hash, "address": _address})
     })
     .catch(err=>{
@@ -148,50 +163,86 @@ exports.share = async (req, res, next) => {
 
 exports.all_history = async (req,res,next) => {
     let history;
+    console.log("I got some historyc: " + req.id);
     try {
-        history = await clinicSchema.find({patientId : req.id}).exec();
+        history = await clinicSchema.find({patientId : req.id}).exec(); //should be changed to req.id
     } catch (err) {
-        res.status(404).json({message : err});
+        return res.status(404).json({message : err});
     }
-    if(history.length > 0) {
-        let arr = []
+    // console.log(history);
+    if(history && history.length > 0) {
+        console.log("I got some history !!!");
+        const arr = []
         for(let h in history){
-            arr.push(h.transactionID);
+            // console.log(h);
+            arr.push(history[h].transactionID);
         }
 
         res.status(200).json({
             history : arr
         });
     } else {
-        res.status(404).json({message : "You got no history"});
+        return res.status(404).json({message : "You got no history"});
     }
 }
 
 exports.history = async (req,res,next) => {
     let history;
     try {
-        history = await clinicSchema.find({transactionID : req.body.transactionID}).exec();
+        history = await clinicSchema.find({transactionID : req.params.id}).exec();
     } catch (err) {
         res.status(404).json({message : err});
     }
-
+    console.log(history);
     if(history.length > 0) {
-        let lms;
-        let accounts;
-        try {
-            lms, accounts = await deploy();
-        } catch (err) {
-            res.status(404).json({message : err});
-        }
-        let id = history[0].patient_bch;
+        // let lms;
+        // let accounts;
+        // try {
+        //     lms, accounts = await deploy();
+        // } catch (err) {
+        //     res.status(404).json({message : err});
+        // }
+        console.log("Hello world");
+        const accounts =  await web3.eth.getAccounts();
+        const lms =  await LMS.deployed();
+        // let id = history[0].patient_bch;
+        let id = "c266d08a1303";
+        // let id = "3412a1e4e030";
         lms.getHash(id, {from: accounts[0]})
         .then(async (hash) => {
-            let data = await ipfs.files.get(hash);
-            res.json({"status":"success", data: JSON.parse(data[0].content.toString())})
+            console.log("Getting file: " + hash);
+            // let data;
+            // try {
+            //     data = await ipfs.files.get(hash);
+            // } catch (err) {
+            //     return res.status(400).json({error : err});
+            // }
+            // data = await ipfs.files.get(hash);
+            const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash;
+            const data = fetch(url, { method : 'POST'})
+            .then(response => {
+                return response.text();
+            })
+            .then(data => {
+                
+                data = data.replace("/", "")
+                data = data.replace("\\", "");
+                data = data.replace("\nL\b", "");
+                data = data.slice(3, data.length -2);
+                console.log(JSON.parse(data.toString()));
+                res.status(200).json({status : "successs", data : JSON.parse(data.toString())});
+            })
+            .catch(err => {
+                return res.status(400).json({"error" : err});
+            });
+            // const content = await data.json();
+            console.log("Data: " + JSON.stringify(data));
+            // res.status(200).json({status : "success"});
+            // res.json({"status":"success", data: JSON.parse(data[0].content.toString())})
 
         })
         .catch(err => {
-            res.status(404).json({message : err});
+            res.status(404).json({message : "Cannot get the file"});
         });
     } else {
         res.status(200).json({message : "You have got no history"});
