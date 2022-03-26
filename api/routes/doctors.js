@@ -31,4 +31,4 @@ module.exports = router;
 //     "phone" : "1234567890",
 //     "password" : "akshatkashyap",
 //     "type" : "Dermatologist"
-// }s
+// }

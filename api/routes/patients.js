@@ -46,7 +46,7 @@ router.get("/appointments", checkauth, patientController.my_appointments); //wor
 
 router.post("/share=:id", checkauth, web3_controllers.share);
 
-router.post("/test", patientController.test);
+router.post("/test", web3_controllers.test);
 
 module.exports = router;
 

@@ -214,7 +214,7 @@ exports.test = async (req, res, next) => {
         // }
         // console.log(ipfsHash.next());
         const arr = [];
-        console.log("Hello");
+        console.log("VV", buffer);
         for await (const item of ipfs.add(Buffer.from(JSON.stringify(buffer)))) {
             console.log('item', item)
             arr.push(item);

@@ -5,7 +5,7 @@ const { lms } = require('../../web3_utils');
 const IPFS = require("ipfs-http-client");
 // const { doesNotMatch } = require("assert");
 // const ipfs = IPFS.create();
-const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'http'});
+const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
 const shortid = require('short-id');
 const fetch = require('node-fetch');
 
@@ -42,7 +42,7 @@ exports.test = async (req, res, next) => {
         // }
         // console.log(ipfsHash.next());
         const arr = [];
-        console.log("Hello");
+        console.log("Vivek Mehta", buffer);
         for await (const item of ipfs.add(Buffer.from(JSON.stringify(buffer)))) {
             console.log('item', item)
             arr.push(item);
@@ -78,18 +78,21 @@ exports.test = async (req, res, next) => {
 }
 
 exports.prescribe = async (req,res,next) => {
-
+    console.log("Prescribing medicines");
     let presciption = req.body.presciption;
-    let transaction_id = req.params.transaction_id;
+    let transaction_id = req.params.id;
+    console.log(presciption, transaction_id);
     const arr = [];
     if(presciption){
+        
+        console.log("pushing into IPFS");
         for await (const item of ipfs.add(Buffer.from(JSON.stringify(presciption)))) {
-            // console.log('item', item)
+            console.log('item', item)
             arr.push(item);
             break;
         } 
     }
-
+    console.log("Pushed to the IPFS");
     let hash = arr[0].path;
     // let lms;
     // let accounts;
@@ -104,16 +107,24 @@ exports.prescribe = async (req,res,next) => {
     const lms =  await LMS.deployed();
 
     //update the clinic collection
+    let result;
     try {
-        await clinicSchema.updateOne({transactionID : transaction_id}, {$set : {patient_bch : id}});
+        result = await clinicSchema.updateOne({transactionID : transaction_id}, {$set : {patient_bch : id}}, {upsert : true});
     }catch(err) {
         res.status(400).json({message : "Could not update"});
     }
 
+    console.log("Result: ", result);
+
     lms.sendIPFS(id, hash, {from: accounts[0]})
     .then((_hash, _address)=>{
-        clinicSchema.updateOne({transactionID : transaction_id}, {$set : {patient_bch : id}});
-        res.json({"status":"success", "generated_id" : id,"ipfs hash" : hash, "blockchain hash": _hash, "address": _address})
+        // try {
+        //     await clinicSchema.updateOne({transactionID : transaction_id}, {$set : {patient_bch : id}});
+        // } catch(err){
+        //     res.status(400).json({message : "Error with Updating DB", err : err});
+        // }
+        
+        return res.json({"status":"success", "generated_id" : id,"ipfs hash" : hash, "blockchain hash": _hash, "address": _address})
     })
     .catch(err=>{
         res.status(500).json({"status":"Failed", "reason":"Upload error occured"})
@@ -144,7 +155,7 @@ exports.share = async (req, res, next) => {
 
         //decrypt patient_blockchain and then access the IPFS hash
 
-        let shared_link = "https://ipfs.infure.io./arg?<hash>";
+        let shared_link = "https://ipfs.infura.io:5001/api/v0/block/get?arg=";
         lms.getHash(id, {from: accounts[0]})
         .then(async (hash) => {
             
@@ -206,7 +217,7 @@ exports.history = async (req,res,next) => {
         const accounts =  await web3.eth.getAccounts();
         const lms =  await LMS.deployed();
         // let id = history[0].patient_bch;
-        let id = "c266d08a1303";
+        let id = history[0].patient_bch;
         // let id = "3412a1e4e030";
         lms.getHash(id, {from: accounts[0]})
         .then(async (hash) => {
@@ -224,19 +235,16 @@ exports.history = async (req,res,next) => {
                 return response.text();
             })
             .then(data => {
-                
-                data = data.replace("/", "")
+                console.log("data: ", data);
+                data = data.substring(data.indexOf("{"), data.indexOf("}")) + "}"
                 data = data.replace("\\", "");
-                data = data.replace("\nL\b", "");
-                data = data.slice(3, data.length -2);
-                console.log(JSON.parse(data.toString()));
-                res.status(200).json({status : "successs", data : JSON.parse(data.toString())});
+                data = JSON.parse(data.toString());
+                return res.status(200).json({status : "successs", data : data});
             })
             .catch(err => {
-                return res.status(400).json({"error" : err});
+                return res.status(400).json({"error" : "reading data"});
             });
             // const content = await data.json();
-            console.log("Data: " + JSON.stringify(data));
             // res.status(200).json({status : "success"});
             // res.json({"status":"success", data: JSON.parse(data[0].content.toString())})
 
