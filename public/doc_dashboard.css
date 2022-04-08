@@ -1,0 +1,44 @@
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('login.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+h3{
+  margin-left: 540px;
+  color:white;
+  font-size: 30px;
+  font-family: sans-serif;
+  border-bottom: 1px solid white;
+  display: inline-block;
+  padding: 15px 7px;
+  border-radius: 10px;
+}
+
+a{
+  margin-left: 580px;
+  color:white;
+  font-size: 15px;
+  font-family: sans-serif;
+}
+
+label{
+  margin-left: 550px;
+  text-align: center;
+  color:white;
+  font-size: 20px;
+  font-family: sans-serif;
+}
+
+p{
+  text-align: center;
+  margin-left: 650px;
+  color:white;
+  font-size: 25px;
+  font-family: sans-serif;
+  border-bottom: 1px solid white;
+  display: inline-block;
+  padding: 15px 7px;
+  border-radius: 10px;
+}

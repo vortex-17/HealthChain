@@ -60,14 +60,17 @@ exports.signup = async (req,res,next) => {
         try {
             await Patient.save();
         } catch (err) {
-            res.status(401).json({message : err});
+            return res.render("misc",{message : "Couldn't Signup. Try again later"});
+            // res.status(401).json({message : err});
         }
 
-        res.status(200).json({message : "Welcome ! Thank you for registering"});
+        return res.render("misc",{message : "Thank You for Registering!"});
+        // res.status(200).json({message : "Welcome ! Thank you for registering"});
     }
 }
 
 exports.login = async (req,res,next) => {
+    console.log(req.body);
     let patient;
     try {
         patient = await patientSchema.find({email: req.body.email}).exec();
@@ -82,7 +85,8 @@ exports.login = async (req,res,next) => {
         try {
             user = await bcrypt.compare(req.body.password, patient[0].password);
         } catch (err) {
-            res.status(404).json({message : "Wrong password"});
+            return res.render("misc",{message : "Wrong Password"});
+            // res.status(404).json({message : "Wrong password"});
         }
 
         if(user){
@@ -93,8 +97,9 @@ exports.login = async (req,res,next) => {
             }, "healthchain", { expiresIn : "60m"});
 
             res.cookie('jwt', token);
-
-            res.status(200).json({token : token});
+            console.log("Will Log you in");
+            return res.render('home', {name : patient[0].name});
+            // res.status(200).json({token : token});
         }
     }
 }
@@ -102,7 +107,7 @@ exports.login = async (req,res,next) => {
 exports.find = async (req,res,next) => {
     let doctors;
     try {
-        doctors = await doctorSchema.find({type : req.params.type}).exec();
+        doctors = await doctorSchema.find({}).exec(); //type : req.params.type
     } catch (err) {
         res.status(404).json({message : err});
     }
@@ -110,15 +115,17 @@ exports.find = async (req,res,next) => {
     if(doctors.length < 1) {
         res.status(404).json({message : "Could not find any doctors"});
     } else {
-        res.status(200).json({doctor_list : doctors});
+        return res.render("show_doc", {result : doctors});
+        // res.status(200).json({doctor_list : doctors});
     }
 
 }
 
 exports.book = async (req,res,next) => {
+    console.log(req.body);
     let appointment;
     try {
-        appointment = await clinicSchema.find({date :req.body.date, doctorId : req.body.doctorId, time : req.body.time }).exec()
+        appointment = await clinicSchema.find({date :req.body.date, doctorId : req.params.doctorId, time : req.body.time }).exec()
     } catch (err) {
         res.status(404).json({message : err});
     }
@@ -131,7 +138,7 @@ exports.book = async (req,res,next) => {
         const new_appointment = new clinicSchema({
             transactionID : new mongoose.Types.ObjectId().toString(),
             patientId : req.id,
-            doctorId : req.body.doctorId,
+            doctorId : req.params.doctorId,
             date : req.body.date,
             time : req.body.time
         });
@@ -143,8 +150,8 @@ exports.book = async (req,res,next) => {
         }
 
         //insert the new patientt in doctor's patient list
-
-        res.status(200).json({message : "Your Appointment has been booked"});
+        return res.render("misc",{message : "Your appointment has been booked"});
+        // res.status(200).json({message : "Your Appointment has been booked"});
     }
 }
 

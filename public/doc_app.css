@@ -1,0 +1,35 @@
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('login.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+h3{
+  margin-left: 575px;
+  color:white;
+  font-size: 30px;
+  font-family: sans-serif;
+  border-bottom: 1px solid white;
+  display: inline-block;
+  padding: 15px 7px;
+  border-radius: 10px;
+}
+
+label{
+  margin-left: 525px;
+  color:white;
+  font-size: 20px;
+  font-family: sans-serif;
+  border-bottom: 1px solid white;
+  display: inline-block;
+  padding: 15px 7px;
+  border-radius: 10px;
+}
+
+p{
+  text-align: center;
+  color:white;
+  font-size: 20px;
+  font-family: sans-serif;
+}

@@ -43,6 +43,8 @@ app.set('view engine', 'ejs');
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
+app.use('/public', express.static('public'));
+
 app.use(
     session({
       secret: "secret key",
@@ -72,18 +74,22 @@ app.use((req, res, next) => {
 app.use("/patients", patientRoutes);
 app.use("/doctors", doctorRotues);
 
+app.get("/login", (req,res,next) => {
+  res.render("login");
+})
+
 app.get("/", (req,res,next) => {
-  res.status(200).json({
-    message : "This is the home page. Currently under development"
-  });
-  // res.render("main");
+  // res.status(200).json({
+  //   message : "This is the home page. Currently under development"
+  // });
+  res.render("main");
 });
 
 app.post("/", (req,res,next) => {
-  res.status(200).json({
-    message : "This is the home page. Currently under development"
-  });
-  // res.render("main");
+  // res.status(200).json({
+  //   message : "This is the home page. Currently under development"
+  // });
+  res.render("main");
 });
 
 app.use((req, res, next) => {

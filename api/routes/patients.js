@@ -30,23 +30,32 @@ const withAuthUserId = [
     }
 ]
 
-router.post("/signup", patientController.signup); //works
+router.post("/signup", patientController.signup); //works / Front End
 
-router.post("/login", patientController.login); //works
+router.post("/login", patientController.login); //works / Front End
 
 router.get("/find=:type", patientController.find); //works
 
-router.post("/book", checkauth, patientController.book); //works
+router.post("/book=:doctorId", ...withAuthUserId, patientController.book); //works
 
-router.get("/history", checkauth, web3_controllers.all_history); //works
+router.get("/history", ...withAuthUserId, web3_controllers.all_history); //works
 
-router.get("/history=:id", checkauth, web3_controllers.history);
+router.get("/history=:id", ...withAuthUserId, web3_controllers.history);
 
-router.get("/appointments", checkauth, patientController.my_appointments); //works
+router.get("/appointments", ...withAuthUserId, patientController.my_appointments); //works
 
-router.post("/share=:id", checkauth, web3_controllers.share);
+router.post("/share=:id", ...withAuthUserId, web3_controllers.share);
 
 router.post("/test", web3_controllers.test);
+
+router.get("/booking_form/:doctorId",...withAuthUserId, (req,res,next) => {
+  console.log("DoctorID: ", req.params.doctorId);
+  res.render("book_app", {docid : req.params.doctorId});
+});
+
+router.get("/history_report=:id", ...withAuthUserId, (req,res,next) => {
+  console.log("TransactionID: ", req.params.id);
+})
 
 module.exports = router;
 

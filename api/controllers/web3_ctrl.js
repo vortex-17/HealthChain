@@ -174,7 +174,7 @@ exports.share = async (req, res, next) => {
 
 exports.all_history = async (req,res,next) => {
     let history;
-    console.log("I got some historyc: " + req.id);
+    console.log("I got some history: " + req.id);
     try {
         history = await clinicSchema.find({patientId : req.id}).exec(); //should be changed to req.id
     } catch (err) {
@@ -188,7 +188,8 @@ exports.all_history = async (req,res,next) => {
             // console.log(h);
             arr.push(history[h].transactionID);
         }
-
+        // console.log(arr);
+        return res.render("all_history", {message : "Showing Results",result : history});
         res.status(200).json({
             history : arr
         });
@@ -217,11 +218,13 @@ exports.history = async (req,res,next) => {
         const accounts =  await web3.eth.getAccounts();
         const lms =  await LMS.deployed();
         // let id = history[0].patient_bch;
-        let id = history[0].patient_bch;
-        // let id = "3412a1e4e030";
+        // let id = history[0].patient_bch;
+        let id = "3412a1e4e030";
         lms.getHash(id, {from: accounts[0]})
         .then(async (hash) => {
+            hash = "QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
             console.log("Getting file: " + hash);
+            
             // let data;
             // try {
             //     data = await ipfs.files.get(hash);
@@ -229,21 +232,36 @@ exports.history = async (req,res,next) => {
             //     return res.status(400).json({error : err});
             // }
             // data = await ipfs.files.get(hash);
-            const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash;
-            const data = fetch(url, { method : 'POST'})
-            .then(response => {
-                return response.text();
-            })
-            .then(data => {
-                console.log("data: ", data);
+            const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
+            const d = fetch(url, { method : 'POST'}).then(data => data.text()).then(data => {
+                console.log(data);
                 data = data.substring(data.indexOf("{"), data.indexOf("}")) + "}"
                 data = data.replace("\\", "");
                 data = JSON.parse(data.toString());
-                return res.status(200).json({status : "successs", data : data});
-            })
-            .catch(err => {
-                return res.status(400).json({"error" : "reading data"});
+                console.log(data);
+                return res.render("history", {message : "Showing Results", result : data, ID : req.params.id});
+                // return res.status(200).json({status : "successs", data : data});
             });
+            // return res.status(200).json({message : "found data"});
+            // const d = fetch(url, { method : 'POST'})
+            // .then(data => {
+            //     // console.log(data);
+            //     // console.log("data from IPFS", data.text());
+            //     // return data.text();
+            //     data.text();
+            // })
+            // .then(data => {
+            //     console.log("data: ", data);
+            //     data = data.substring(data.indexOf("{"), data.indexOf("}")) + "}"
+            //     data = data.replace("\\", "");
+            //     data = JSON.parse(data.toString());
+            //     console.log(data);
+            //     // return res.render("history", {message : "Showing Results",result : data});
+            //     return res.status(200).json({status : "successs", data : data});
+            // })
+            // .catch(err => {
+            //     return res.status(400).json({"error" : "reading data", "message": err});
+            // });
             // const content = await data.json();
             // res.status(200).json({status : "success"});
             // res.json({"status":"success", data: JSON.parse(data[0].content.toString())})

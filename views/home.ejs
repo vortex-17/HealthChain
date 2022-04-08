@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home page</title>
+        <link rel='stylesheet' href='../public/home.css' />
+        <style>
+            body{
+                text-align: center;
+            }
+            a:link, a:visited {
+              background-color: #f44336;
+              color: white;
+              padding: 14px 25px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: red;
+            }
+            </style>
+    </head>
+    <h3>Welcome <%=name%>! </h3>
+    <a style = "display:block;float:right" href = "/login">Logout</a>
+    <body>
+        <br>
+        <p>Dashboard</p><br><br>
+        <!-- <label>Links:</label> -->
+        <br><br><br>
+        <a href = "http://localhost:4000/patients/find=0">Book an Appointment</a><br><br>
+        <a href = "http://localhost:4000/patients/show_medicines">Buy Medicines </a><br><br>
+        <a href = "http://localhost:4000/patients/history">History </a><br><br>
+        <a href = "http://localhost:4000/patients/cart">Your Cart</a>
+        <br><br><br><br>
+        
+
+    </body>
+</html>

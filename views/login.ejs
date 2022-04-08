@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="../public/loginq.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div id="h">G Hospitals</div>
+            <ul>
+                <li><a href="#plogin">Patient Login</a></li>
+                <li><a href="#psign">Patient Signup</a></li>
+                <li><a href="#dlogin">Doctor Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="plogin">
+        <div class="p"> Patient Login</div>
+        <form method="POST" action = "http://localhost:4000/patients/login"class="fo">
+            <input type="email" name="email" required placeholder="Email"><br>
+            <input type="password" name="password" required placeholder="Password"><br>
+            <input type="submit" name="Submit">
+        </form>
+    </div>
+    <div id="psign">
+        <div id="q" class = "p">Patient Signup</div>
+        <form method="POST" action = "http://localhost:4000/patients/signup" id="foo" onsubmit = "return validate()">
+            <input type = "text" name = "name" id = "name" placeholder = "Name" required><br>
+            <input type = "text" name = "email" id = "email" placeholder = "Email" required><br>
+            <input type = "phone" name = "phone" id = "phone" placeholder="Phone" required><br>
+             <input type = "password" name = "password" id = "password" placeholder="password" required><br>
+            <input type = "submit" >
+
+        </form>
+    </div>
+    <div id="dlogin">
+        <div class="p"> Doctor Login</div>
+        <form method="POST" action = "http://localhost:4000/doctor/login" class="fo">
+            <input type="email" name="email" required placeholder="Email"><br>
+            <input type="password" name="password" required placeholder="Password"><br>
+            <input type="submit" name="Submit">
+        </form>
+    </div>
+    <script>
+         function validate(){
+                var username = document.getElementById("name").value;
+                var pwd1 = document.getElementById("password").value;
+                var email = document.getElementById("email").value;
+                var phone = document.getElementById("phone").value;
+                var userRegex = /^[a-zA-Z0-9]{8,20}/;
+                var pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+                var emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+                var phoneRegex = /^[0-9]{10,11}/;
+
+                usernameResult = userRegex.test(username);
+                pwdResult = pwdRegex.test(pwd1);
+                emailResult = emailRegex.test(email);
+                phoneResult = phoneRegex.test(phone);
+                if(usernameResult === false){
+                    alert("Username : Minimum 8 characters required");
+                    return false;
+                }
+                if(pwdResult === false){
+                    alert("Password : Not matching the criteria");
+                    return false;
+                }
+                if(emailResult === false){
+                    alert("Email : Wrong email ID");
+                    return false;
+                }
+                if(phoneResult === false){
+                    alert("Phone : Wrong Format");
+                    return false;
+                }
+
+
+
+            }
+    </script>
+</body>
+
+</html>

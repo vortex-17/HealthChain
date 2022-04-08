@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>History</title>
+        <link rel='stylesheet' href='../public/show_doc.css' />
+        <style>
+
+            body {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/login.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color : white;
+                text-align:center
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+    
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                tr:hover {background-color:white;
+                    color:black;
+                }
+
+            a:link, a:visited {
+              background-color: #f44336;
+              color: white;
+              padding: 14px 25px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: red;
+            }
+    
+            </style>
+    </head>
+    <body>
+        <h1>Showing Relevant Doctors</h1><br><br><br>
+        <table>
+            <tr>
+                <th>Name of the Doctor</th>
+                <th>Doctor Type</th>
+                <th>Doctor ID</th>
+                <th>Book</th>
+            </tr>
+            <% result.forEach(function(doctor){ %>
+                <tr>
+                    <th>Dr. <%=doctor.name%></th>
+                    <th><%=doctor.type %></th>
+                    <th><%=doctor._id %></th>
+                    <th><a href = 'http://localhost:4000/patients/booking_form/<%=doctor._id %>'>Book</a></th>
+                </tr>
+            <% }) %>
+        </table>
+        <!-- <% result.forEach(function(doctor){ %>
+            <p> <%=doctor.name%>  - - - <%=doctor.type %>  --- <a href = 'http://localhost:4000/patients/booking_form/<%=doctor._id %>'>Book</a><p></p>
+        <% }) %> -->
+    </body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctors</title>
+        <link rel='stylesheet' href='../public/show_doc.css' />
+    </head>
+    <body>
+        <h3>Showing Relevant Doctors</h3><br>
+        <% result.forEach(function(med){ %>
+            <p> <%=med.name%>  - - - <%=med.price %>  --- <a href = 'http://localhost:4000/patients/booking_form/<%=med._id %>'>Book</a><p></p>
+        <% }) %>
+    </body>
+</html>

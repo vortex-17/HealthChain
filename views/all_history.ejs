@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>History</title>
+        <link rel='stylesheet' href='../public/history.css' />
+        <style>
+
+            body {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/login.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color : white;
+                text-align:center
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+    
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                tr:hover {background-color:white;
+                    color:black;
+                }
+    
+            </style>
+    </head>
+    <body>
+        <h1>Showing Your history</h1><br>
+        <p class="two"><%= message %>!</p><br>
+        <table>
+            <tr>
+                <!-- <th>Treatment</th> -->
+                <th>Date</th>
+                <th>Report</th>
+            </tr>
+            <% result.forEach(function(r){ %>
+                <tr>
+                    <!-- <th><%=r.treatment%></th> -->
+                    <th><%=r.date %></th>
+                    <th><form action = "http://localhost:4000/patients/history=<%=r.transactionID%>" method = "GET" class="fo" >
+                        <input type = "submit" value = "report">
+                    </form></th>
+                </tr>
+            <% }) %>
+        </table>
+        <!-- <% result.forEach(function(r){ %>
+            <p class='three'><%=r.treatment%>  - - - <%=r.date %></p><br>
+        <% }) %> -->
+    </body>
+</html>

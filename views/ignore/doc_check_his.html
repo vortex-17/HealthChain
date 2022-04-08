@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Check Patient History</title>
+        <link rel='stylesheet' href='../public/doc_check_his.css' />
+    </head>
+    <body>
+        <h3>Welcome Doctor</h3><br>
+        <label>History for your Patient</label><br><br>
+        <% result.forEach(function(r){ %>
+            <p><%=r.name %> --- <%=r.treatment%> --- <%=r.date %></p><br>
+        <% }) %>
+    </body>
+</html>

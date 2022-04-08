@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>History</title>
+        <link rel='stylesheet' href='../public/history.css' />
+        <style>
+
+            body {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/login.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color : white;
+                text-align:center
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+    
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                tr:hover {background-color:white;
+                    color:black;
+                }
+    
+            </style>
+    </head>
+    <body>
+        <h1>Showing Your history</h1><br>
+        <p class="two"><%= message %>!</p><br>
+        <p>Transaction ID: <%= ID %></p>
+        <table>
+            <tr>
+                <!-- <th>Treatment</th> -->
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+            <% Object.keys(result).forEach(function(key){ %>
+                <tr>
+                    <th><%- key %></th>
+                    <th><%- result[key] %></th>
+                </tr>
+            <% }); %>
+
+        </table>
+    </body>
+</html>

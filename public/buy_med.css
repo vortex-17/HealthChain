@@ -1,0 +1,70 @@
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('login.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.fo {
+    position: relative;
+    top: 50px;
+}
+
+.fo input[type="submit"]{
+    border: 0;
+    background: transparent;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    border: 2px solid white;
+    padding: 10px;
+    width: 150px;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.fo input[type="number"],
+.fo input[type="text"],
+.fo input[type="email"], {
+    background: none;
+}
+
+.fo input[type="number"],
+.fo input[type="text"],
+.fo input[type="email"],
+.fo input[type="number"],
+textarea {
+    border: 0;
+    background: none;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    border: 2px solid white;
+    padding: 10px;
+    width: 200px;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s ease;
+}
+
+p{
+  text-align: center;
+  color:white;
+  font-size: 30px;
+  font-family: sans-serif;
+}
+
+.fo input[type="text"]:hover,
+textarea:hover,
+.fo input[type="number"]:hover,
+.fo input[type="text"]:focus,
+.fo input[type="number"]:focus,
+.fo input[type="email"]:focus,
+.fo input[type="email"]:hover,
+.fo input[type="submit"]:focus,
+.fo input[type="submit"]:hover {
+    border: 2px green solid;
+    outline: none;
+}

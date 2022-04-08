@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctors</title>
+        <style>
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/login.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color : white;
+            text-align:center
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            tr:hover {background-color:white;
+                    color:black;
+                }
+
+            a:link, a:visited {
+              background-color: #f44336;
+              color: white;
+              padding: 14px 25px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: red;
+            }
+
+        </style>
+    
+    </head>
+    <body>
+        <h1>Showing Relevant Medicines</h1><br><br><br>
+        <table>
+            <tr>
+                <th>Name of the Medicine</th>
+                <th>Price</th>
+                <th>Buy</th>
+            </tr>
+            <% result.forEach(function(r){ %>
+                <tr>
+                    <th><%=r.name%></th>
+                    <th><%=r.price%></th>
+                    <th><a href = 'http://localhost:4000/patients/buy_form/<%=r._id %>'>Book</a></th>
+                </tr>
+            <% }) %>
+        </table>
+       
+    </body>
+</html>

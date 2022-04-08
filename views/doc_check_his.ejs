@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Check Patient History</title>
+        <link rel='stylesheet' href='../public/doc_check_his.css' />
+        <style>
+            body{
+                color:white;
+                text-align: center;
+            }
+            table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+    
+            th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+
+            tr:hover {background-color:white;
+                    color:black;
+                }
+
+            a:link, a:visited {
+              background-color: #f44336;
+              color: white;
+              padding: 14px 25px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: red;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h3>Welcome Doctor</h3><br>
+        <label>History for your Patient</label><br><br>
+        <table>
+            <tr>
+                <th>Treatment</th>
+                <th>Date</th>
+            </tr>
+            <% result.forEach(function(r){ %>
+                <tr>
+                    <th><%=r.treatment %></th>
+                    <th><%=r.date%></th>
+                </tr>
+            <% }) %>
+        </table>
+         <!-- <% result.forEach(function(r){ %>
+            <p><%=r.name %> --- <%=r.treatment%> --- <%=r.date %></p><br>
+        <% }) %> -->
+    </body>
+</html>

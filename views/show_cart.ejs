@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cart</title>
+        <style>
+
+            body {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/login.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color : white;
+                text-align:center
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+    
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                tr:hover {background-color:white;
+                    color:black;
+                }
+    
+            </style>
+    </head>
+    <body>
+        <h1>Showing Contents of your cart</h1><br><br><br>
+        <table>
+            <tr>
+                <th>Name of the Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>TotalPrice</th>
+            </tr>
+            <% result.forEach(function(r){ %>
+                <tr>
+                    <th><%=r.name%></th>
+                    <th><%=r.price%></th>
+                    <th><%=r.quantity%></th>
+                    <th><%=r.totalPrice%></th>
+                </tr>
+            <% }) %>
+        </table>
+        <!-- <% result.forEach(function(r){ %>
+            <p><%=r.name%> ---  <%=r.price%> --- <%=r.totalPrice%></p>
+        <% }) %> -->
+    </body>
+</html>

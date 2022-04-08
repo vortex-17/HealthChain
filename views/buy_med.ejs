@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Buy Medicine</title>
+        <link rel='stylesheet' href='../public/buy_med.css' />
+        <style>
+            body {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/login.jpg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color:white;
+                text-align: center;
+            }
+
+            .fo {
+                position: relative;
+                top: 50px;
+            }
+
+            .fo input[type="submit"]{
+                border: 0;
+                background: transparent;
+                display: block;
+                margin: 10px auto;
+                text-align: center;
+                border: 2px solid white;
+                padding: 10px;
+                width: 150px;
+                color: white;
+                border-radius: 24px;
+                transition: 0.25s ease;
+                cursor: pointer;
+            }
+
+            .fo label
+            {
+            color: white;
+            }
+
+            .fo input[type="number"],
+            .fo input[type="text"],
+            .fo input[type="email"],
+            .fo input[type="number"],
+            .fo input[type="time"],
+            .fo input[type="date"] {
+                background: none;
+            }
+
+            .fo input[type="number"],
+            .fo input[type="text"],
+            .fo input[type="email"],
+            .fo input[type="number"],
+            .fo input[type="time"],
+            .fo input[type="date"],
+            textarea {
+                border: 0;
+                background: none;
+                display: block;
+                margin: 10px auto;
+                text-align: center;
+                border: 2px solid white;
+                padding: 10px;
+                width: 200px;
+                color: white;
+                border-radius: 24px;
+                transition: 0.25s ease;
+            }
+
+            p{
+            text-align: center;
+            color:white;
+            font-size: 30px;
+            font-family: sans-serif;
+            }
+
+            .fo input[type="text"]:hover,
+            textarea:hover,
+            .fo input[type="number"]:hover,
+            .fo input[type="text"]:focus,
+            .fo input[type="number"]:focus,
+            .fo input[type="time"]:focus,
+            .fo input[type="time"]:hover,
+            .fo input[type="email"]:focus,
+            .fo input[type="email"]:hover,
+            .fo input[type="date"]:focus,
+            .fo input[type="date"]:hover,
+            .fo input[type="submit"]:focus,
+            .fo input[type="submit"]:hover {
+                border: 2px green solid;
+                outline: none;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h1>Information about the Medicine:</h1>
+        
+        <h4>Name : <%=info.name%></h4>
+        
+        <h4>Price : <%=info.price%></h4>
+        
+        <h4>Used For : <%=info.for%></h4>
+        <br>
+        <h5>Fill out this form</h5>
+        <form action = "http://localhost:4000/patients/buy_med=<%=medid%>" method = "POST" class="fo" onsubmit = "validate()">
+            <input type = "text" name = "name" id = "name" required placeholder="Name"><br>
+            <input type = "text" name = "treatment" required placeholder="Treatement"><br>
+            <input type = "number" name = "phone" id = "phone" required placeholder="Phone No."><br>
+            <input type = "email" name = "email"  id = "email" required placeholder="Email"><br>
+            <input type = "number" name = "quantity" required placeholder="Quantity"><br>
+            <input type = "submit" value = "Add to Cart">
+        </form>
+
+        <script>
+            function validate(){
+                var username = document.getElementById("name").value;
+                var phone = document.getElementById("phone").value;
+                var email = document.getElementById("email").value;
+                var userRegex = /^[a-zA-Z0-9]{8,20}/;
+                var phoneRegex = /^[0-9]{10}/;
+                var emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+
+                usernameResult = userRegex.test(username);
+                phoneResult = phoneRegex.test(pwd1);
+                emailResult = emailRegex.test(email);
+                if(usernameResult === false){
+                    alert("Username : Minimum 8 characters required");
+                }
+                if(emailResult === false){
+                    alert("Email : Wrong email ID");
+                }
+                if(phoneResult === false){
+                    alert("Wrong Email");
+                }
+
+            }
+        </script>
+    </body>
+</html>

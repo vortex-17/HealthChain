@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctor Dashboard</title>
+        <link rel='stylesheet' href='../public/doc_app.css' />
+        <style>
+            body{
+                color:white;
+            }
+            table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+    
+            th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+
+            tr:hover {background-color:white;
+                    color:black;
+                }
+
+            a:link, a:visited {
+              background-color: #f44336;
+              color: white;
+              padding: 14px 25px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: red;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h3>Welcome Doctor</h3>
+        <br>
+        <label>Here are your appointments for today</label><br><br><br>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Treatment</th>
+                <th>Start Time</th>
+                <th>Phone Number</th>
+                <th>Check History</th>
+            </tr>
+            <% result.forEach(function(r){ %>
+                <tr>
+                    <th><%=r.Name%></th>
+                    <th><%=r.treatment %></th>
+                    <th><%=r.startTime%></th>
+                    <th><%=r.phone%></th>
+                    <th><a href = 'http://localhost:4000/doctor/check-history=<%=r.patientId %>'>Check History</a></th>
+                </tr>
+            <% }) %>
+        </table>
+        <!-- <% result.forEach(function(r){ %>
+            <p><%=r.Name%>  - - - <%=r.treatment %> ---<%=r.startTime%> --- <%=r.phone%> --- <a href = 'http://localhost:4000/doctor/check-history=<%=r.patientId %>'>Check History</a></p>
+            <br>
+        <% }) %> -->
+
+    </body>
+</html>

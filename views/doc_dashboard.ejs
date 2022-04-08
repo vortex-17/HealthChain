@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctor Dashboard</title>
+        <link rel='stylesheet' href='../public/home.css' />
+        <style>
+            a:link, a:visited {
+              background-color: #f44336;
+              color: white;
+              padding: 14px 25px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: red;
+            }
+            </style>
+    </head>
+    <body>
+        <h3>Welcome Dr. <%=name%></h3>
+        <a style = "display:block;float:right" href = "/login">Logout</a>
+        <br><br><br><br>
+        <a href = "http://localhost:4000/doctor/my_appointments">My Appointments</a>
+
+    </body>
+</html>
