@@ -58,6 +58,7 @@ exports.signup = async (req,res,next) => {
 }
 
 exports.login = async (req,res,next) => {
+    console.log(req.body);
     let doctor;
     try {
         doctor = await doctorSchema.find({email: req.body.email}).exec();
@@ -83,8 +84,9 @@ exports.login = async (req,res,next) => {
             }, "healthchain", { expiresIn : "60m"});
 
             res.cookie('jwt', token);
-
-            res.status(200).json({token : token});
+            console.log("found doctor");
+            return res.render('doc_dashboard', {name : doctor[0].name});
+            // res.status(200).json({token : token});
         }
     }
 }
@@ -104,7 +106,8 @@ exports.my_appointments = async (req, res, next) => {
     if(appointments.length < 1) {
         res.status(400).json({message : "You do not have any appointments for today"});
     } else {
-        res.status(200).json({appointments : appointments});
+        res.render("doc_app", {result: appointments});
+        // res.status(200).json({appointments : appointments});
     }
 }
 

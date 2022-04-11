@@ -79,7 +79,7 @@ exports.test = async (req, res, next) => {
 
 exports.prescribe = async (req,res,next) => {
     console.log("Prescribing medicines");
-    let presciption = req.body.presciption;
+    let presciption = req.body;
     let transaction_id = req.params.id;
     console.log(presciption, transaction_id);
     const arr = [];
@@ -218,11 +218,11 @@ exports.history = async (req,res,next) => {
         const accounts =  await web3.eth.getAccounts();
         const lms =  await LMS.deployed();
         // let id = history[0].patient_bch;
-        // let id = history[0].patient_bch;
-        let id = "3412a1e4e030";
+        let id = history[0].patient_bch;
+        // let id = "3412a1e4e030";
         lms.getHash(id, {from: accounts[0]})
         .then(async (hash) => {
-            hash = "QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
+            // hash = "QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
             console.log("Getting file: " + hash);
             
             // let data;
@@ -232,7 +232,8 @@ exports.history = async (req,res,next) => {
             //     return res.status(400).json({error : err});
             // }
             // data = await ipfs.files.get(hash);
-            const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
+            // const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
+            const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash
             const d = fetch(url, { method : 'POST'}).then(data => data.text()).then(data => {
                 console.log(data);
                 data = data.substring(data.indexOf("{"), data.indexOf("}")) + "}"
