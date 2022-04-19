@@ -81,6 +81,7 @@ exports.prescribe = async (req,res,next) => {
     console.log("Prescribing medicines");
     let presciption = req.body;
     let transaction_id = req.params.id;
+    presciption["Doctor Name"] = req.user;
     console.log(presciption, transaction_id);
     const arr = [];
     if(presciption){

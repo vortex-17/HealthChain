@@ -26,9 +26,13 @@
     <body>
         <br>
         <p>Dashboard</p><br><br>
+        <form action = "http://localhost:4000/patients/find" method = "POST" class = "fo">
+          <input type = "text" id = "type" name = "type"><br>
+          <input type = "submit" name = "search" id = "search"><br>
+        </form>
         <!-- <label>Links:</label> -->
         <br><br><br>
-        <a href = "http://localhost:4000/patients/find=0">Book an Appointment</a><br><br>
+        <a href = "http://localhost:4000/patients/find_all">Book an Appointment</a><br><br>
         <!-- <a href = "http://localhost:4000/patients/show_medicines">Buy Medicines </a><br><br> -->
         <a href = "http://localhost:4000/patients/history">History </a><br><br>
         <a href = "http://localhost:4000/patients/appointments">Appointments </a><br><br>

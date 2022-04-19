@@ -104,7 +104,7 @@ exports.login = async (req,res,next) => {
     }
 }
 
-exports.find = async (req,res,next) => {
+exports.find_all = async (req,res,next) => {
     let doctors;
     try {
         doctors = await doctorSchema.find({}).exec(); //type : req.params.type
@@ -121,6 +121,26 @@ exports.find = async (req,res,next) => {
 
 }
 
+exports.find = async (req,res,next) => {
+    console.log(req.body);
+    let type = req.body.type;
+    let doctors;
+    if (type) {
+        try {
+            doctors = await doctorSchema.find({type : type}).exec();
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({"error":  err});
+        }
+
+        if(doctors.length < 1){
+            res.status(200).json({message : "Could not find any doctors for this type"});
+        } else {
+            return res.render("show_doc", {result : doctors});
+        }
+    }
+}
+
 exports.book = async (req,res,next) => {
     console.log(req.body);
     let appointment;
@@ -135,10 +155,18 @@ exports.book = async (req,res,next) => {
             message : "An appointment already exists at this time. Please try for another time"
         });
     } else {
+        let doctor;
+        try {
+            doctor = await doctorSchema.find({_id : req.params.doctorId}).exec();
+        } catch (err) {
+            res.status(400).json({message : err});
+        }
         const new_appointment = new clinicSchema({
             transactionID : new mongoose.Types.ObjectId().toString(),
             patientId : req.id,
             doctorId : req.params.doctorId,
+            patientName : req.user,
+            doctorName : doctor[0].name,
             date : req.body.date,
             time : req.body.time
         });

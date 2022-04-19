@@ -23,6 +23,7 @@ const withAuthUserId = [
       req["expiry"] = claims["exp"];
       console.log(claims);
       req.id = claims["_id"];
+      req.user = claims["name"];
       console.log(req.id);
     //   console.log(req['authUserId']);
     //   console.log(claims['sub']);
@@ -34,7 +35,9 @@ router.post("/signup", patientController.signup); //works / Front End
 
 router.post("/login", patientController.login); //works / Front End
 
-router.get("/find=:type", patientController.find); //works
+router.post("/find", patientController.find); //works
+
+router.get("/find_all", patientController.find_all); //works
 
 router.post("/book=:doctorId", ...withAuthUserId, patientController.book); //works
 

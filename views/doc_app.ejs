@@ -45,12 +45,14 @@
             <tr>
                 <th>Date</th>
                 <th>Time</th>
+                <th>Patient Name</th>
                 <th>Write Presciption</th>
             </tr>
             <% result.forEach(function(r){ %>
                 <tr>
                     <th><%=r.date%></th>
                     <th><%=r.time %></th>
+                    <th><%=r.patientName %></th>
                     <th><a href = 'http://localhost:4000/doctors/prescribtion=<%=r.transactionID %>'>Write Prescription</a></th>
                 </tr>
             <% }) %>

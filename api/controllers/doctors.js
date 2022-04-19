@@ -95,7 +95,7 @@ exports.my_appointments = async (req, res, next) => {
     let date = new Date();
     let d = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDay();
     d = date.getDay() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-    d = "20/03/22"; //For testing
+    d = "20/03/2022"; //For testing
     let appointments;
     try {
         appointments = await clinicSchema.find({doctorId : req.id, date : d}).exec();
@@ -106,6 +106,7 @@ exports.my_appointments = async (req, res, next) => {
     if(appointments.length < 1) {
         res.status(400).json({message : "You do not have any appointments for today"});
     } else {
+        console.log(appointments);
         res.render("doc_app", {result: appointments});
         // res.status(200).json({appointments : appointments});
     }

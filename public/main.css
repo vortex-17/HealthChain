@@ -74,7 +74,7 @@ nav ul li a:hover{
 	border-radius: 5px;
 }
 header{
-	background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('main1.jpg');
+	background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('blockchain.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-attachment: fixed; 
@@ -82,7 +82,7 @@ header{
 header h2{
 	font-size: 40px;
 	position: relative;
-	transform: translate(40%,400%);
+	transform: translate(30%,400%);
 }
 header h5{
 	font-size: 23px;

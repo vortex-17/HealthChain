@@ -21,6 +21,7 @@ const withAuthUserId = [
       req["expiry"] = claims["exp"];
       console.log(claims);
       req.id = claims["_id"];
+      req.user = claims["name"];
       console.log(req.id);
     //   console.log(req['authUserId']);
     //   console.log(claims['sub']);
