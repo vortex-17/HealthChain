@@ -47,6 +47,10 @@
                 </tr>
             <% }); %>
 
+            <form action = "http://localhost:4000/patients/share=<%=ID%>" method = "POST">
+                <input type = "submit" name = "submit" value = "create PDF" ><br>
+            </form>
+
         </table>
     </body>
 </html>

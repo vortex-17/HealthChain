@@ -8,11 +8,17 @@ const IPFS = require("ipfs-http-client");
 const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
 const shortid = require('short-id');
 const fetch = require('node-fetch');
+const PDFDocument = require("pdfkit");
+const fs = require('fs');
+const path = require('path');
+const nodemailer = require("nodemailer");
 
 const doctorSchema = require("../models/doctors");
 const patientSchema = require("../models/patients");
 const clinicSchema = require("../models/clinic");
 const { response } = require('express');
+
+const credentials = require("../../config");
 
 if (typeof web3 !== 'undefined') {
   var web3 = new Web3(web3.currentProvider)
@@ -27,6 +33,40 @@ let deploy = async () => {
     const accounts =  await web3.eth.getAccounts();
     const lms =  await LMS.deployed();
     return lms, accounts
+}
+
+function createPDF(filename, data) {
+    let pdfDoc = new PDFDocument({ margin: 30, size: 'A4' });
+    pdfDoc.pipe(fs.createWriteStream(filename));
+    pdfDoc.fontSize(18);
+
+    pdfDoc.font('Times-BoldItalic').text("HealthChain Prescription", { align: 'center', height : '100px'}).moveDown(2); 
+    
+    // pdfDoc.font('Times-Roman').text("ID:", {underline : true}).moveDown(0.5);
+    // pdfDoc.font('Times-Roman').text(data.id).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Date and Time:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.date + " , " + data.time).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Doctor Name:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.doctor).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Patient Name:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.patient).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Symptoms:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.symptoms).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Disease:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.disease).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Medicines:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.medicines).moveDown(1);
+
+    pdfDoc.font('Times-Roman').text("Tests:", {underline : true}).moveDown(0.5);
+    pdfDoc.font('Times-Roman').text(data.tests).moveDown(1);
+
+    pdfDoc.end();
 }
 
 exports.test = async (req, res, next) => {
@@ -78,10 +118,25 @@ exports.test = async (req, res, next) => {
 }
 
 exports.prescribe = async (req,res,next) => {
+    let history;
+    try {
+        history = await clinicSchema.find({id : req.params.id}).exec();
+    } catch (err) {
+        res.status(200).json({message : err});
+    }
+
+    if (history.length < 1) {
+        return res.status(400).json({message : "No history with this ID"});
+    }
+
+    let date = history[0].date;
+    let time = history[0].time;
     console.log("Prescribing medicines");
     let presciption = req.body;
     let transaction_id = req.params.id;
-    presciption["Doctor Name"] = req.user;
+    presciption["doctor"] = req.user;
+    presciption["date"] = date;
+    presciption["time"] = time;
     console.log(presciption, transaction_id);
     const arr = [];
     if(presciption){
@@ -145,19 +200,23 @@ exports.share = async (req, res, next) => {
     if(appointment.length < 1) {
         res.status(404).json({message : "No appointment with this transactionID"});
     } else {
-        let lms;
-        let accounts;
-        try {
-            lms, accounts = await deploy();
-        } catch (err) {
-            res.status(404).json({message : err});
-        }
-        const patient_blockchain = appointment[0].patient_bch;
+        // let lms;
+        // let accounts;
+        // try {
+        //     lms, accounts = await deploy();
+        // } catch (err) {
+        //     res.status(404).json({message : err});
+        // }
+        const accounts =  await web3.eth.getAccounts();
+        const lms =  await LMS.deployed();
+        let patient_blockchain = appointment[0].patient_bch;
+
+        console.log("blockchain ID: " + patient_blockchain);
 
         //decrypt patient_blockchain and then access the IPFS hash
 
         let shared_link = "https://ipfs.infura.io:5001/api/v0/block/get?arg=";
-        lms.getHash(id, {from: accounts[0]})
+        lms.getHash(patient_blockchain, {from: accounts[0]})
         .then(async (hash) => {
             
             //we got the hash
@@ -165,6 +224,52 @@ exports.share = async (req, res, next) => {
 
             //email the link
             let emailID = req.body.email;
+            const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash
+            const d = fetch(url, { method : 'POST'}).then(data => data.text()).then(data => {
+                console.log(data);
+                first_bracket = data.indexOf("{");
+                second_bracket = data.indexOf("}");
+                if (second_bracket < first_bracket) {
+                    second_bracket = data.indexOf("}", first_bracket);
+                } 
+                data = data.substring(first_bracket, second_bracket) + "}"
+                data = data.replace("\\", "");
+                data = JSON.parse(data.toString());
+                console.log(data);
+                
+                //data is an object
+
+                data["patient"] = req.user;
+                data["date"] = appointment[0].date;
+                data["time"] = appointment[0].time;
+                const filename = appointment[0].transactionID + ".pdf"
+                const pdf = createPDF(filename, data);
+
+                const transporter = nodemailer.createTransport({
+                    service: "gmail",
+                    auth: {
+                      user: credentials.EMAIL,
+                      pass: credentials.EMAIL_PASS,
+                    },
+                });
+
+                const mailOptions = {
+                    from: credentials.EMAIL, // sender address
+                    to: [emailID],
+                    subject: "A Healthchain presciption has been shared with you! ", // Subject line
+                    text: "A Healthchain presciption has been shared with You. Please check the attached file for more details.",
+                    attachments: [
+                        {
+                            filename: filename,       
+                            path: path.join(__dirname, filename),                                  
+                            contentType: 'application/pdf'
+                        }]
+                };
+
+                return res.status(200).json({message : "Created PDF"});
+
+                // transporter.sendMail(mailOptions); 
+            });
 
         })
         .catch(err => {
@@ -237,13 +342,19 @@ exports.history = async (req,res,next) => {
             const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash
             const d = fetch(url, { method : 'POST'}).then(data => data.text()).then(data => {
                 console.log(data);
-                data = data.substring(data.indexOf("{"), data.indexOf("}")) + "}"
+                first_bracket = data.indexOf("{");
+                second_bracket = data.indexOf("}");
+                if (second_bracket < first_bracket) {
+                    second_bracket = data.indexOf("}", first_bracket);
+                } 
+                data = data.substring(first_bracket, second_bracket) + "}"
                 data = data.replace("\\", "");
                 data = JSON.parse(data.toString());
                 console.log(data);
                 return res.render("history", {message : "Showing Results", result : data, ID : req.params.id});
                 // return res.status(200).json({status : "successs", data : data});
             });
+
             // return res.status(200).json({message : "found data"});
             // const d = fetch(url, { method : 'POST'})
             // .then(data => {
