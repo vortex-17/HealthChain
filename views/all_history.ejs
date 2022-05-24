@@ -12,41 +12,83 @@
                 background-attachment: fixed;
                 color : white;
                 text-align:center
-                }
-                table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
+            }
+            table {
+                margin-left:5%;
+                margin-right:5%;
+                border-collapse: collapse;
+                width: 90%;
+            }
     
-                th, td {
-                    padding: 8px;
-                    text-align: left;
-                    border-bottom: 1px solid #ddd;
-                }
+            th, td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                font-size: large;
+                background-color: antiquewhite;
+                color: black
+            }
+            a:link, a:visited {
+                background-color: #f44336;
+                border: 2px solid white;
+                border-radius: 25px;
+                color: white;
+                padding: 14px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+            }
+                    
+            a:hover, a:active {
+                    background-color: red;
+            }
 
-                tr:hover {background-color:white;
-                    color:black;
-                }
+            /* tr:hover {background-color:white;
+                color:black;
+            } */
+
+            .row-hover {
+                background-color:white;
+                color:black;
+                /* opacity: 0.8; */
+            }
+
+            input[type=button], input[type=submit] {
+              background-color: #f44336;
+              border: 2px solid white;
+              border-radius: 25px;
+              color: white;
+              padding: 14px 14px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+
+
     
             </style>
     </head>
     <body>
+        <a style = "display:block;float:left" href = "http://localhost:4000/patients/home">Home</a><br>
         <h1>Showing Your history</h1><br>
-        <p class="two"><%= message %>!</p><br>
+        <!-- <p class="two"><%= message %>!</p><br> -->
         <table>
             <tr>
                 <!-- <th>Treatment</th> -->
                 <th>Date</th>
+                <th>Time</th>
                 <th>Report</th>
             </tr>
             <% result.forEach(function(r){ %>
-                <tr>
+                <tr class = "row-hover">
                     <!-- <th><%=r.treatment%></th> -->
-                    <th><%=r.date %></th>
-                    <th><%=r.time %></th>
-                    <th><form action = "http://localhost:4000/patients/history=<%=r.transactionID%>" method = "GET" class="fo" >
+                    <td><%=r.date %></td>
+                    <td><%=r.time %></td>
+                    <td><form action = "http://localhost:4000/patients/history=<%=r.transactionID%>" method = "GET" class="fo" >
                         <input type = "submit" value = "report">
-                    </form></th>
+                    </form></td>
                 </tr>
             <% }) %>
         </table>

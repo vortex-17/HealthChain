@@ -4,3 +4,5 @@ config.js
 test.js
 api/.DS_Store
 .DS_Store
+access.log
+/access.log

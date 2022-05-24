@@ -224,6 +224,8 @@ exports.share = async (req, res, next) => {
 
             //email the link
             let emailID = req.body.email;
+            console.log(emailID);
+            // let emailID = "mehtavivek03@gmail.com";
             const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash
             const d = fetch(url, { method : 'POST'}).then(data => data.text()).then(data => {
                 console.log(data);
@@ -261,14 +263,13 @@ exports.share = async (req, res, next) => {
                     attachments: [
                         {
                             filename: filename,       
-                            path: path.join(__dirname, filename),                                  
+                            path: "/Users/vivek/Desktop/healthchain/" + filename,                                  
                             contentType: 'application/pdf'
                         }]
                 };
 
+                transporter.sendMail(mailOptions); 
                 return res.status(200).json({message : "Created PDF"});
-
-                // transporter.sendMail(mailOptions); 
             });
 
         })

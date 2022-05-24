@@ -58,7 +58,11 @@ router.get("/booking_form/:doctorId",...withAuthUserId, (req,res,next) => {
 
 router.get("/history_report=:id", ...withAuthUserId, (req,res,next) => {
   console.log("TransactionID: ", req.params.id);
-})
+});
+
+router.get("/home",...withAuthUserId, (req,res,next) => {
+  return res.render('home', {name : req.user});
+});
 
 module.exports = router;
 

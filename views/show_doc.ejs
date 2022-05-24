@@ -5,46 +5,72 @@
         <link rel='stylesheet' href='../public/show_doc.css' />
         <style>
 
-            body {
-                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/healthcare-background.jpeg');
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-                color : white;
-                text-align:center
-                }
+                body {
+                    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/healthcare-background.jpeg');
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-attachment: fixed;
+                    color : white;
+                    text-align:center
+                    }
                 table {
+                    margin-left:10%;
+                    margin-right:10%;
                     border-collapse: collapse;
-                    width: 100%;
+                    width: 80%;
                 }
-    
+                a:link, a:visited {
+                    background-color: #f44336;
+                    border: 2px solid white;
+                    border-radius: 25px;
+                    color: white;
+                    padding: 14px 25px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                }
+                    
+                a:hover, a:active {
+                    background-color: red;
+                }
+        
                 th, td {
                     padding: 8px;
                     text-align: left;
                     border-bottom: 1px solid #ddd;
                 }
-
-                tr:hover {background-color:white;
-                    color:black;
+                th {
+                    font-size: large;
+                    background-color: antiquewhite;
+                    color: black
                 }
 
-            a:link, a:visited {
-              background-color: #f44336;
-              color: white;
-              padding: 14px 25px;
-              text-align: center;
-              text-decoration: none;
-              display: inline-block;
-            }
-            
-            a:hover, a:active {
-              background-color: red;
-            }
+                /* tr:hover {background-color:white;
+                    color:black;
+                } */
+
+                .row-hover {
+                    background-color:white;
+                    color:black;
+                    /* opacity: 0.8; */
+                }
+
+                input[type=button], input[type=submit] {
+                background-color: #f44336;
+                border: 2px solid white;
+                border-radius: 25px;
+                color: white;
+                padding: 14px 25px;
+                text-align: center;
+                cursor: pointer;
+                text-decoration: none;
+                }
     
             </style>
     </head>
     <body>
-        <h1>Showing Relevant Doctors</h1><br><br><br>
+        <a style = "display:block;float:left" href = "http://localhost:4000/patients/home">Home</a><br>
+        <h1>SHOWING DOCTORS</h1><br><br><br>
         <table>
             <tr>
                 <th>Name of the Doctor</th>
@@ -53,11 +79,11 @@
                 <th>Book</th>
             </tr>
             <% result.forEach(function(doctor){ %>
-                <tr>
-                    <th>Dr. <%=doctor.name%></th>
-                    <th><%=doctor.type %></th>
-                    <th><%=doctor._id %></th>
-                    <th><a href = 'http://localhost:4000/patients/booking_form/<%=doctor._id %>'>Book</a></th>
+                <tr class = "row-hover">
+                    <td>Dr. <%=doctor.name%></td>
+                    <td><%=doctor.type %></td>
+                    <td><%=doctor._id %></td>
+                    <td><a href = 'http://localhost:4000/patients/booking_form/<%=doctor._id %>'>Book</a></td>
                 </tr>
             <% }) %>
         </table>

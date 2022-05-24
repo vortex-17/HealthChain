@@ -4,43 +4,74 @@
         <title>Doctor Dashboard</title>
         <link rel='stylesheet' href='../public/doc_app.css' />
         <style>
-            body{
-                color:white;
+             body {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/healthcare-background.jpeg');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                color : white;
+                text-align:center
             }
             table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
+                margin-left:5%;
+                margin-right:5%;
+                border-collapse: collapse;
+                width: 90%;
+            }
     
             th, td {
-                    padding: 8px;
-                    text-align: left;
-                    border-bottom: 1px solid #ddd;
-                }
-
-            tr:hover {background-color:white;
-                    color:black;
-                }
-
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                font-size: large;
+                background-color: antiquewhite;
+                color: black
+            }
             a:link, a:visited {
+                background-color: #f44336;
+                border: 2px solid white;
+                border-radius: 25px;
+                color: white;
+                padding: 14px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+            }
+                    
+            a:hover, a:active {
+                    background-color: red;
+            }
+
+            /* tr:hover {background-color:white;
+                color:black;
+            } */
+
+            .row-hover {
+                background-color:white;
+                color:black;
+                /* opacity: 0.8; */
+            }
+
+            input[type=button], input[type=submit] {
               background-color: #f44336;
+              border: 2px solid white;
+              border-radius: 25px;
               color: white;
-              padding: 14px 25px;
+              padding: 14px 14px;
               text-align: center;
               text-decoration: none;
               display: inline-block;
-            }
-            
-            a:hover, a:active {
-              background-color: red;
             }
 
         </style>
     </head>
     <body>
-        <h3>Welcome Doctor</h3>
+        <!-- <a style = "display:block;float:left" href = "http://localhost:4000/patients/home">Home</a><br> -->
+        <!-- <h3 style = "text-align:left">Welcome Doctor</h3> -->
         <br>
-        <label>Here are your appointments for today</label><br><br><br>
+        <h1>Your appointments for today</h1><br><br><br>
         <table>
             <tr>
                 <th>Date</th>
@@ -49,11 +80,11 @@
                 <th>Write Presciption</th>
             </tr>
             <% result.forEach(function(r){ %>
-                <tr>
-                    <th><%=r.date%></th>
-                    <th><%=r.time %></th>
-                    <th><%=r.patientName %></th>
-                    <th><a href = 'http://localhost:4000/doctors/prescribtion=<%=r.transactionID %>'>Write Prescription</a></th>
+                <tr class = "row-hover">
+                    <td><%=r.date%></td>
+                    <td><%=r.time %></td>
+                    <td><%=r.patientName %></td>
+                    <td><a href = 'http://localhost:4000/doctors/prescribtion=<%=r.transactionID %>'>Write Prescription</a></td>
                 </tr>
             <% }) %>
         </table>

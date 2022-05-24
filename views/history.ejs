@@ -14,25 +14,72 @@
                 text-align:center
                 }
                 table {
+                    margin-left:10%;
+                    margin-right:10%;
                     border-collapse: collapse;
-                    width: 100%;
+                    width: 80%;
                 }
-    
+                a:link, a:visited {
+                    background-color: #f44336;
+                    border: 2px solid white;
+                    border-radius: 25px;
+                    color: white;
+                    padding: 14px 25px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                }
+                    
+                a:hover, a:active {
+                    background-color: red;
+                }
+        
                 th, td {
                     padding: 8px;
                     text-align: left;
                     border-bottom: 1px solid #ddd;
                 }
-
-                tr:hover {background-color:white;
-                    color:black;
+                th {
+                    font-size: large;
+                    background-color: antiquewhite;
+                    color: black
                 }
-    
+
+                /* tr:hover {background-color:white;
+                    color:black;
+                } */
+
+                .row-hover {
+                    background-color:white;
+                    color:black;
+                    /* opacity: 0.8; */
+                }
+
+                input[type=button], input[type=submit] {
+                background-color: #f44336;
+                border: 2px solid white;
+                border-radius: 25px;
+                color: white;
+                padding: 14px 25px;
+                text-align: center;
+                cursor: pointer;
+                text-decoration: none;
+                }
+                input[type=text] {
+                border-radius: 25px;
+                margin:6px;
+                color: white;
+                text-align: center;
+                padding: 14px 25px;
+                }
+        
             </style>
     </head>
     <body>
-        <h1>Showing Your history</h1><br>
-        <p class="two"><%= message %>!</p><br>
+        <a style = "display:block;float:left" href = "http://localhost:4000/patients/home">Home</a><br>
+        <h1>Showing Your history</h1>
+        
+        <!-- <p class="two"><%= message %>!</p><br> -->
         <p>Transaction ID: <%= ID %></p>
         <table>
             <tr>
@@ -41,16 +88,17 @@
                 <th>Value</th>
             </tr>
             <% Object.keys(result).forEach(function(key){ %>
-                <tr>
-                    <th><%- key %></th>
-                    <th><%- result[key] %></th>
+                <tr class = "row-hover">
+                    <td><%- key %></td>
+                    <td><%- result[key] %></td>
                 </tr>
             <% }); %>
 
             <form action = "http://localhost:4000/patients/share=<%=ID%>" method = "POST">
-                <input type = "submit" name = "submit" value = "create PDF" ><br>
+                <input type = "text" name = "email" id = "email" placeholder = "Enter Email ID">
+                <input type = "submit" name = "submit" value = "Share" ><br>
             </form>
-
+            <br><br>
         </table>
     </body>
 </html>
