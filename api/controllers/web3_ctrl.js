@@ -180,7 +180,8 @@ exports.prescribe = async (req,res,next) => {
         //     res.status(400).json({message : "Error with Updating DB", err : err});
         // }
         
-        return res.json({"status":"success", "generated_id" : id,"ipfs hash" : hash, "blockchain hash": _hash, "address": _address})
+        return res.render('misc_doc', {message : "Prescription pushed to IPFS"});
+        // return res.json({"status":"success", "generated_id" : id,"ipfs hash" : hash, "blockchain hash": _hash, "address": _address});
     })
     .catch(err=>{
         res.status(500).json({"status":"Failed", "reason":"Upload error occured"})
@@ -269,7 +270,8 @@ exports.share = async (req, res, next) => {
                 };
 
                 transporter.sendMail(mailOptions); 
-                return res.status(200).json({message : "Created PDF"});
+                return res.render('misc', {message : "Created PDF"});
+                // return res.status(200).json({message : "Created PDF"});
             });
 
         })
@@ -385,6 +387,7 @@ exports.history = async (req,res,next) => {
             res.status(404).json({message : "Cannot get the file"});
         });
     } else {
+        return res.render()
         res.status(200).json({message : "You have got no history"});
     }
 }

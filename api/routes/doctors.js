@@ -42,7 +42,11 @@ router.post("/prescribe=:id", ...withAuthUserId, web3_controllers.prescribe); //
 router.get("/prescribtion=:Id",...withAuthUserId, (req,res,next) => {
     console.log("TransactionID: ", req.params.Id);
     res.render("prescribe", {id : req.params.Id});
-  });
+});
+
+router.get("/home",...withAuthUserId, (req,res,next) => {
+  return res.render('doc_dashboard', {name : req.user});
+});
   
 
 module.exports = router;

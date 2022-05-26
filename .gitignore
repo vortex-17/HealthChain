@@ -6,3 +6,5 @@ api/.DS_Store
 .DS_Store
 access.log
 /access.log
+*.log
+*.docx
