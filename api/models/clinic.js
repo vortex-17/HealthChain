@@ -9,8 +9,7 @@ const clinicSchema = mongoose.Schema({
     patientName: {type: String},
     date : {type : String, required : true},
     time : {type : Number, required : true},
-    patient_bch : {type: String}, //encrypted - can allow users to access data from blockchain -> IPFS
-    doctor_bch : {type:String},     //encrypted - cann allow doctods to access data from blockchain -> IPFS
+    patient_bch : {type: String}, //Can allow users to access data from blockchain -> IPFS
 });
 
 module.exports = mongoose.model("clinic", clinicSchema);

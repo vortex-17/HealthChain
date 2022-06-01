@@ -120,7 +120,7 @@ exports.test = async (req, res, next) => {
 exports.prescribe = async (req,res,next) => {
     let history;
     try {
-        history = await clinicSchema.find({id : req.params.id}).exec();
+        history = await clinicSchema.find({transactionID : req.params.id}).exec();
     } catch (err) {
         res.status(200).json({message : err});
     }
@@ -384,6 +384,7 @@ exports.history = async (req,res,next) => {
 
         })
         .catch(err => {
+            return res.render("misc", {message : "The doctor has not uploaded the prescription"});
             res.status(404).json({message : "Cannot get the file"});
         });
     } else {

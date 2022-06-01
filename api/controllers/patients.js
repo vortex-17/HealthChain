@@ -204,7 +204,7 @@ exports.my_appointments = async (req, res, next) => {
     let date = new Date();
     let d = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDay();
     d = date.getDay() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-    d = "20/03/22"; //Just for testing
+    d = "3/06/2022"; //Just for testing
     console.log("Date: " + d);
     let appointments;
     try {
@@ -214,7 +214,8 @@ exports.my_appointments = async (req, res, next) => {
     }
     console.log(appointments);
     if(appointments.length < 1) {
-        res.status(400).json({message : "You do not have any appointments for today"});
+        return res.render("misc", {message : "You do not have any appointments for today"});
+        // res.status(400).json({message : "You do not have any appointments for today"});
     } else {
         return res.render("appointments", {result : appointments})
         // res.status(200).json({appointments : appointments});

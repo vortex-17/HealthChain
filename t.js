@@ -43,6 +43,7 @@ exports.signup = async (req,res,next) => {
                 phone : req.body.phone,
                 password: hash,
                 type : req.body.type,
+                public_key : "vivek",
               }
         );
 
@@ -94,7 +95,7 @@ exports.my_appointments = async (req, res, next) => {
     let date = new Date();
     let d = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDay();
     d = date.getDay() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-    d = "3/06/2022"; //For testing
+    d = "20/03/2022"; //For testing
     let appointments;
     try {
         appointments = await clinicSchema.find({doctorId : req.id, date : d}).exec();
@@ -109,12 +110,4 @@ exports.my_appointments = async (req, res, next) => {
         res.render("doc_app", {result: appointments});
         // res.status(200).json({appointments : appointments});
     }
-}
-
-exports.mypatients = async (req, res, next) => {
-
-}
-
-exports.prescribe = async (req, res, next) => {
-    
 }
