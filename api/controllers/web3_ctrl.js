@@ -75,12 +75,6 @@ exports.test = async (req, res, next) => {
     let id = shortid.generate() + shortid.generate()
     if(buffer) {
         let ipfsHash;
-        // try {
-        //     ipfsHash = await ipfs.add(Buffer.from(JSON.stringify(buffer)));
-        // } catch (err) {
-        //     res.status(404).json({error: err});
-        // }
-        // console.log(ipfsHash.next());
         const arr = [];
         console.log("Vivek Mehta", buffer);
         for await (const item of ipfs.add(Buffer.from(JSON.stringify(buffer)))) {
@@ -88,21 +82,8 @@ exports.test = async (req, res, next) => {
             arr.push(item);
             break;
         } 
-        // let value;
-        // let done;
-        // while (true) {
-        //     done, value = await ipfsHash.next();
-        //     if (done) break;
-        // }
         const accounts =  await web3.eth.getAccounts();
         const lms =  await LMS.deployed();
-        // let lms;
-        // let accounts;
-        // try {
-        //     lms, accounts = await deploy();
-        // } catch (err) {
-        //     res.status(404).json({message : err});
-        // }
         console.log(accounts[0])
         console.log("Hello World");
         let hash = arr[0].path;
@@ -316,13 +297,6 @@ exports.history = async (req,res,next) => {
     }
     console.log(history);
     if(history.length > 0) {
-        // let lms;
-        // let accounts;
-        // try {
-        //     lms, accounts = await deploy();
-        // } catch (err) {
-        //     res.status(404).json({message : err});
-        // }
         console.log("Hello world");
         const accounts =  await web3.eth.getAccounts();
         const lms =  await LMS.deployed();
@@ -334,13 +308,7 @@ exports.history = async (req,res,next) => {
             // hash = "QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
             console.log("Getting file: " + hash);
             
-            // let data;
-            // try {
-            //     data = await ipfs.files.get(hash);
-            // } catch (err) {
-            //     return res.status(400).json({error : err});
-            // }
-            // data = await ipfs.files.get(hash);
+            
             // const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=QmW7DQPyPxzVHZdCgRBLkTNvUtC1vJsxXe2QprQjaPwink";
             const url = "https://ipfs.infura.io:5001/api/v0/block/get?arg=" + hash
             const d = fetch(url, { method : 'POST'}).then(data => data.text()).then(data => {
@@ -358,7 +326,28 @@ exports.history = async (req,res,next) => {
                 // return res.status(200).json({status : "successs", data : data});
             });
 
-            // return res.status(200).json({message : "found data"});
+          
+        })
+        .catch(err => {
+            return res.render("misc", {message : "The doctor has not uploaded the prescription"});
+            res.status(404).json({message : "Cannot get the file"});
+        });
+    } else {
+        return res.render()
+        res.status(200).json({message : "You have got no history"});
+    }
+}
+
+
+// let data;
+            // try {
+            //     data = await ipfs.files.get(hash);
+            // } catch (err) {
+            //     return res.status(400).json({error : err});
+            // }
+            // data = await ipfs.files.get(hash);
+
+  // return res.status(200).json({message : "found data"});
             // const d = fetch(url, { method : 'POST'})
             // .then(data => {
             //     // console.log(data);
@@ -381,14 +370,3 @@ exports.history = async (req,res,next) => {
             // const content = await data.json();
             // res.status(200).json({status : "success"});
             // res.json({"status":"success", data: JSON.parse(data[0].content.toString())})
-
-        })
-        .catch(err => {
-            return res.render("misc", {message : "The doctor has not uploaded the prescription"});
-            res.status(404).json({message : "Cannot get the file"});
-        });
-    } else {
-        return res.render()
-        res.status(200).json({message : "You have got no history"});
-    }
-}

@@ -19,11 +19,8 @@ const clinicSchema = require("../models/clinic");
 
 const shortid = require('short-id')
 const IPFS = require("ipfs-http-client");
-// const { doesNotMatch } = require("assert");
-// const ipfs = IPFS.create();
 const ipfs = IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
-// const lms = require("../../web3_utils").lms;
-// const accounts = require("../../web3_utils").accounts; 
+
 
 exports.signup = async (req,res,next) => {
     let patient;

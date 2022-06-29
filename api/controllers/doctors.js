@@ -103,7 +103,8 @@ exports.my_appointments = async (req, res, next) => {
     }
 
     if(appointments.length < 1) {
-        res.status(400).json({message : "You do not have any appointments for today"});
+        return res.render("misc_doc", {message : "You do not have any appointments for today"});
+        // res.status(400).json({message : "You do not have any appointments for today"});
     } else {
         console.log(appointments);
         res.render("doc_app", {result: appointments});

@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-contract Inbox{
+contract Ethe_IPFS{
     //Structure
     mapping (string=>string) public ipfsInbox;
     
@@ -18,7 +18,7 @@ contract Inbox{
     // An empty constructor that creates an instance of the conteact
     constructor() public{}
     
-    //takes in receiver's address and IPFS hash. Places the IPFSadress in the receiver's inbox
+    //takes in receiver's address and IPFS hash. Places the IPFSadress in the receiver's Ethe_IPFS
     function sendIPFS(string memory _address, string memory _ipfsHash) notFull(ipfsInbox[_address]) public{
         ipfsInbox[_address] = _ipfsHash;
         emit ipfsSent(_ipfsHash, _address);
